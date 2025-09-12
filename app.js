@@ -18,7 +18,8 @@ function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 function formatVND(n) { return (n||0).toLocaleString("vi-VN"); }
 
 // ===== QR (VietQR) =====
-function makeVietQR({ bankCode = "MB", accountNo, amount, addInfo = "WEDDING" }) {
+function makeVietQR({ bankCode = "970422", accountNo, amount, addInfo = "WEDDING" }) {
+  // MB Bank BIN = 970422
   const base = `https://img.vietqr.io/image/${bankCode}-${accountNo}-compact2.png`;
   const params = new URLSearchParams();
   if (amount && amount > 0) params.set("amount", String(amount));
@@ -75,6 +76,7 @@ function initBuilder() {
   const publishBtn = $("publishBtn");
   const previewFrame = $("previewFrame");
   const qrImg = $("qrImg"); 
+  const qrLink = $("qrLink"); // thêm link mở QR
   const copyBtn = $("copyBtn");
   const accNo = $("accNo").textContent.trim(); 
   const amountText = $("amountText");
@@ -85,7 +87,7 @@ function initBuilder() {
     templateSelect.value = chosen;
   }
 
-  // pricing: 4 templates 300k, premium 400k
+  // pricing
   function getPrice(template) { return template === "premium" ? 400000 : 300000; }
   function refreshPrice() {
     const price = getPrice(templateSelect.value);
@@ -136,8 +138,10 @@ function initBuilder() {
     const data = collect();
     const amount = refreshPrice();
     const addInfo = `WEDDING-${toSlug(data.bride)}-${toSlug(data.groom)}`;
-    qrImg.src = makeVietQR({ bankCode: "MB", accountNo: accNo, amount, addInfo });
-    alert("Quét QR để thanh toán. Sau khi thanh toán, bấm 'Xuất & Lấy link' để tạo thiệp.");
+    const url = makeVietQR({ bankCode: "970422", accountNo: accNo, amount, addInfo });
+    qrImg.src = url;
+    if (qrLink) qrLink.href = url; // link mở trực tiếp
+    alert("Quét QR để thanh toán. Sau đó bấm 'Xuất & Lấy link'.");
     publishBtn.disabled = false; 
   });
 
