@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tạo thiệp — Thiệp Cưới Online</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">Tạo Thiệp</div>
+    <nav>
+      <a href="index.html">Mẫu</a>
+      <a href="manager.html">Quản lý</a>
+    </nav>
+  </header>
+
+  <main class="builder-grid">
+    <section class="panel form-panel">
+      <h2>1) Thông tin thiệp</h2>
+
+      <label>Chọn mẫu
+        <select id="templateSelect">
+          <option value="classic">Classic (300.000đ)</option>
+          <option value="floral">Floral (300.000đ)</option>
+          <option value="minimal">Minimal (300.000đ)</option>
+          <option value="royal">Royal (300.000đ)</option>
+          <option value="premium">Premium (400.000đ)</option>
+        </select>
+      </label>
+
+      <div class="two-col">
+        <label>Tên cô dâu<input id="bride" placeholder="Nguyễn A"/></label>
+        <label>Tên chú rể<input id="groom" placeholder="Trần B"/></label>
+      </div>
+
+      <div class="two-col">
+        <label>Ngày cưới<input id="date" type="date"/></label>
+        <label>Giờ cưới<input id="time" type="time"/></label>
+      </div>
+
+      <label>Địa điểm tổ chức<input id="venue" placeholder="Trung tâm tiệc cưới..."/></label>
+      <label>Địa chỉ chi tiết<input id="address" placeholder="Số nhà, phường/xã, quận/huyện, tỉnh/thành"/></label>
+      <label>Google Maps link (URL)<input id="maps" placeholder="https://maps.google.com/?q=..."/></label>
+
+      <div class="two-col">
+        <label>Bố cô dâu<input id="brideFather" placeholder="Ông..."/></label>
+        <label>Mẹ cô dâu<input id="brideMother" placeholder="Bà..."/></label>
+      </div>
+      <div class="two-col">
+        <label>Bố chú rể<input id="groomFather" placeholder="Ông..."/></label>
+        <label>Mẹ chú rể<input id="groomMother" placeholder="Bà..."/></label>
+      </div>
+
+      <label>Lời nhắn gửi khách mời<textarea id="note" rows="3" placeholder="Rất hân hạnh được đón tiếp!"></textarea></label>
+
+      <label>Ảnh bìa thiệp (JPG/PNG)
+        <input id="cover" type="file" accept="image/*"/>
+      </label>
+
+      <h3>2) Thanh toán</h3>
+      <p class="muted">Giá tự tính theo mẫu: 4 mẫu thường 300.000đ, 1 mẫu Premium 400.000đ.</p>
+
+      <div class="bank-box">
+        <div>
+          <div><strong>MB Bank</strong></div>
+          <div>Chủ TK: <strong id="accName">Lâm Trần Quân</strong></div>
+          <div>Số TK: <strong id="accNo">0906325133</strong>
+            <button class="btn-sm" id="copyBtn">Sao chép</button>
+          </div>
+          <div><strong>Thành tiền: <span id="amountText">300.000</span>đ</strong></div>
+        </div>
+        <img id="qrImg" alt="QR" />
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="previewBtn">Xem preview</button>
+        <button class="btn" id="payBtn">Tạo QR</button>
+        <button class="btn primary" id="publishBtn" disabled>Xuất & Lấy link</button>
+      </div>
+
+      <p class="hint">* Sau thanh toán và bấm “Xuất & Lấy link”, bạn sẽ có đường dẫn thiệp: <code>/invitation.html?slug=ten-co-dau-ten-chu-re</code>.</p>
+    </section>
+
+    <section class="panel preview-panel">
+      <h2>Preview</h2>
+      <iframe id="previewFrame" title="Preview" sandbox="allow-same-origin"></iframe>
+    </section>
+  </main>
+
+  <footer class="site-footer">© 2025 Thiệp Cưới Online</footer>
+</body>
+</html>

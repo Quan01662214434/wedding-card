@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thiệp Cưới Online — Chọn mẫu</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">Thiệp Cưới Online</div>
+    <nav>
+      <a href="index.html">Mẫu</a>
+      <a href="admin.html">Tạo thiệp</a>
+      <a href="manager.html">Quản lý</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero hero-home">
+      <h1>Tạo thiệp cưới đẹp — <span class="accent">trong 5 phút</span></h1>
+      <p>Chọn 1 trong 5 mẫu, nhập thông tin, xem preview tức thì, thanh toán QR, xuất link thiệp để chia sẻ.</p>
+      <a href="admin.html" class="btn primary">Bắt đầu tạo thiệp</a>
+    </section>
+
+    <section>
+      <h2>Chọn mẫu thiệp</h2>
+      <div class="templates-grid">
+        <label class="template-card">
+          <input type="radio" name="template" value="classic" checked>
+          <div class="thumb t-classic"></div>
+          <div class="t-info"><strong>Classic</strong><span>300.000đ</span></div>
+        </label>
+        <label class="template-card">
+          <input type="radio" name="template" value="floral">
+          <div class="thumb t-floral"></div>
+          <div class="t-info"><strong>Floral</strong><span>300.000đ</span></div>
+        </label>
+        <label class="template-card">
+          <input type="radio" name="template" value="minimal">
+          <div class="thumb t-minimal"></div>
+          <div class="t-info"><strong>Minimal</strong><span>300.000đ</span></div>
+        </label>
+        <label class="template-card">
+          <input type="radio" name="template" value="royal">
+          <div class="thumb t-royal"></div>
+          <div class="t-info"><strong>Royal</strong><span>300.000đ</span></div>
+        </label>
+        <label class="template-card premium">
+          <input type="radio" name="template" value="premium">
+          <div class="thumb t-premium"></div>
+          <div class="t-info"><strong>Premium</strong><span>400.000đ</span></div>
+        </label>
+      </div>
+
+      <div class="center">
+        <button id="goBuilder" class="btn">Tiếp tục</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">© 2025 Thiệp Cưới Online</footer>
+
+  <script>
+    document.getElementById('goBuilder').addEventListener('click', () => {
+      const chosen = document.querySelector('input[name="template"]:checked').value;
+      localStorage.setItem('wedding_template', chosen);
+      window.location.href = 'admin.html';
+    });
+  </script>
+</body>
+</html>
