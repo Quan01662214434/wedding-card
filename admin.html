@@ -1,20 +1,40 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tạo thiệp — Thiệp Cưới Online</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css"/>
+
+  <!-- Font (optional, đẹp hơn) -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- JS chính của dự án -->
   <script defer src="app.js"></script>
+
+  <style>
+    /* Chỉ để chắc chắn phần QR hiện đẹp, có thể bỏ nếu đã có trong style.css */
+    .bank-box { margin-top:10px; display:flex; align-items:center; gap:16px; padding:12px; border:1px dashed #f0b6bd; border-radius:12px; background:#fff7f8; }
+    .bank-box img { width:190px; height:190px; border-radius:10px; object-fit:contain; background:#fff; }
+    .muted { color:#666; }
+    .btn { background:#b11e2d; color:#fff; padding:10px 16px; border:none; border-radius:10px; cursor:pointer; font-weight:700; }
+    .btn:hover { filter:brightness(.95); }
+    .btn-sm { font-size:12px; padding:4px 8px; border-radius:8px; border:none; background:#444; color:#fff; cursor:pointer; }
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .panel { background:#fff; border-radius:16px; padding:20px; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+    .builder-grid { display:grid; grid-template-columns: 1.1fr .9fr; gap:20px; padding:24px; }
+    .preview-panel iframe { width:100%; height:600px; border:none; background:#fff; border-radius:12px; box-shadow: inset 0 0 0 1px #eee; }
+    @media (max-width: 900px) { .builder-grid{grid-template-columns:1fr} .preview-panel iframe{height:520px} }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="brand">Tạo Thiệp</div>
-    <nav>
-      <a href="index.html">Mẫu</a>
-      <a href="manager.html">Quản lý</a>
+  <header class="site-header" style="display:flex;justify-content:space-between;align-items:center;padding:16px;background:#b11e2d;color:#fff;">
+    <div class="brand" style="font-weight:800;">Tạo Thiệp</div>
+    <nav style="display:flex;gap:12px;">
+      <a href="index.html" style="color:#fff;text-decoration:none;font-weight:600;">Mẫu</a>
+      <a href="manager.html" style="color:#fff;text-decoration:none;font-weight:600;">Quản lý</a>
     </nav>
   </header>
 
@@ -64,25 +84,30 @@
       <h3>2) Thanh toán</h3>
       <p class="muted">Giá tự tính theo mẫu: 4 mẫu thường 300.000đ, 1 mẫu Premium 400.000đ.</p>
 
+      <!-- Khối QR: ĐÃ CẬP NHẬT THÊM LINK MỞ ẢNH + XỬ LÝ LỖI -->
       <div class="bank-box">
         <div>
           <div><strong>MB Bank</strong></div>
           <div>Chủ TK: <strong id="accName">Lâm Trần Quân</strong></div>
           <div>Số TK: <strong id="accNo">0906325133</strong>
-            <button class="btn-sm" id="copyBtn">Sao chép</button>
+            <button class="btn-sm" id="copyBtn" type="button">Sao chép</button>
           </div>
-          <div><strong>Thành tiền: <span id="amountText">300.000</span>đ</strong></div>
+          <div style="margin-top:6px;">Thành tiền: <strong><span id="amountText">300.000</span>đ</strong></div>
+          <div style="margin-top:6px">
+            <a id="qrLink" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">Mở ảnh QR</a>
+          </div>
         </div>
-        <img id="qrImg" alt="QR" />
+
+        <img id="qrImg" alt="QR" onerror="this.style.display='none'; document.getElementById('qrLink').textContent='Mở ảnh QR (dự phòng)';"/>
       </div>
 
-      <div class="actions">
-        <button class="btn" id="previewBtn">Xem preview</button>
-        <button class="btn" id="payBtn">Tạo QR</button>
-        <button class="btn primary" id="publishBtn" disabled>Xuất & Lấy link</button>
+      <div class="actions" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;">
+        <button class="btn" id="previewBtn" type="button">Xem preview</button>
+        <button class="btn" id="payBtn" type="button">Tạo QR</button>
+        <button class="btn" id="publishBtn" type="button" disabled>Xuất & Lấy link</button>
       </div>
 
-      <p class="hint">* Sau thanh toán và bấm “Xuất & Lấy link”, bạn sẽ có đường dẫn thiệp: <code>/invitation.html?slug=ten-co-dau-ten-chu-re</code>.</p>
+      <p class="hint" style="color:#777;font-size:13px;margin-top:8px;">* Sau thanh toán và bấm “Xuất & Lấy link”, bạn sẽ có đường dẫn thiệp: <code>/invitation.html?slug=ten-co-dau-ten-chu-re</code>.</p>
     </section>
 
     <section class="panel preview-panel">
@@ -91,6 +116,18 @@
     </section>
   </main>
 
-  <footer class="site-footer">© 2025 Thiệp Cưới Online</footer>
+  <footer class="site-footer" style="padding:16px;text-align:center;color:#777;">© 2025 Thiệp Cưới Online</footer>
+
+  <!-- Đoạn test nhanh QR (không bắt buộc). Bấm thử để chắc ảnh QR hiển thị -->
+  <script>
+    // Bạn có thể xoá script test này sau khi xác nhận QR hoạt động
+    window.addEventListener('DOMContentLoaded', () => {
+      const testBtn = document.getElementById('payBtn');
+      if (!testBtn) return;
+      // thêm tooltip nhỏ
+      testBtn.title = 'Nếu QR không hiện ảnh, kiểm tra lại app.js và thử mở link "Mở ảnh QR"';
+    });
+  </script>
 </body>
 </html>
+
