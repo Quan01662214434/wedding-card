@@ -1,4 +1,3 @@
-
 // ===== Utilities =====
 const $ = (id) => document.getElementById(id);
 const q = (sel, root=document) => root.querySelector(sel);
@@ -10,12 +9,15 @@ const toSlug = (str) => (str || "")
 
 const DB_KEY = "wedding_invites_v2"; // localStorage key
 
-function loadDB() { try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; } catch(_) { return {}; } }
+function loadDB() { 
+  try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; } 
+  catch(_) { return {}; } 
+}
 function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 
 function formatVND(n) { return (n||0).toLocaleString("vi-VN"); }
 
-// ===== QR (VietQR/img.vietqr.io) =====
+// ===== QR (VietQR) =====
 function makeVietQR({ bankCode = "MB", accountNo, amount, addInfo = "WEDDING" }) {
   const base = `https://img.vietqr.io/image/${bankCode}-${accountNo}-compact2.png`;
   const params = new URLSearchParams();
@@ -68,13 +70,16 @@ function initBuilder() {
   const groomFather = $("groomFather"), groomMother = $("groomMother");
   const note = $("note"); const cover = $("cover");
 
-  const previewBtn = $("previewBtn"); const payBtn = $("payBtn"); const publishBtn = $("publishBtn");
+  const previewBtn = $("previewBtn"); 
+  const payBtn = $("payBtn"); 
+  const publishBtn = $("publishBtn");
   const previewFrame = $("previewFrame");
-  const qrImg = $("qrImg"); const copyBtn = $("copyBtn");
-  const accNo = $("accNo").textContent.trim(); const accName = $("accName").textContent.trim();
+  const qrImg = $("qrImg"); 
+  const copyBtn = $("copyBtn");
+  const accNo = $("accNo").textContent.trim(); 
   const amountText = $("amountText");
 
-  // prefill template from index
+  // prefill template
   const chosen = localStorage.getItem("wedding_template");
   if (chosen && q(`#templateSelect option[value="${chosen}"]`)) {
     templateSelect.value = chosen;
@@ -133,15 +138,20 @@ function initBuilder() {
     const addInfo = `WEDDING-${toSlug(data.bride)}-${toSlug(data.groom)}`;
     qrImg.src = makeVietQR({ bankCode: "MB", accountNo: accNo, amount, addInfo });
     alert("Quét QR để thanh toán. Sau khi thanh toán, bấm 'Xuất & Lấy link' để tạo thiệp.");
-    publishBtn.disabled = false; // MVP: mở khóa sau khi tạo QR
+    publishBtn.disabled = false; 
   });
 
   publishBtn.addEventListener("click", () => {
     const data = collect();
+    if(!data.bride || !data.groom){
+      alert("Vui lòng nhập tên cô dâu và chú rể!");
+      return;
+    }
     const slug = `${toSlug(data.bride)}-${toSlug(data.groom)}` || "thiep-cuoi";
     const db = loadDB();
-    db[slug] = { ...data, paid: true, createdAt: Date.now(), accNo: accNo, accName: accName };
+    db[slug] = { ...data, paid: true, createdAt: Date.now() };
     saveDB(db);
+
     const url = `invitation.html?slug=${encodeURIComponent(slug)}`;
     navigator.clipboard.writeText(url).catch(()=>{});
     alert(`Thiệp đã xuất! Link đã copy: \n${url}`);
@@ -157,7 +167,7 @@ function initInvitation() {
   if(!slug) { root.textContent = "Thiếu tham số slug"; return; }
   const db = loadDB();
   const data = db[slug];
-  if(!data) { root.textContent = "Không tìm thấy thiệp (có thể tạo trên thiết bị khác)."; return; }
+  if(!data) { root.textContent = "Không tìm thấy thiệp."; return; }
 
   const themeMap = {
     classic: "theme-classic",
@@ -194,7 +204,7 @@ function initManager() {
   const list = $("orders");
   const db = loadDB();
   const items = Object.entries(db).sort((a,b)=> (b[1]?.createdAt||0) - (a[1]?.createdAt||0));
-  if(items.length === 0) { list.textContent = "Chưa có thiệp nào trên thiết bị này."; return; }
+  if(items.length === 0) { list.textContent = "Chưa có thiệp nào."; return; }
 
   list.innerHTML = items.map(([slug, d]) => `
     <div class="card">
@@ -204,7 +214,7 @@ function initManager() {
       <div class="badge">${d.template}</div>
       <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
         <a target="_blank" href="invitation.html?slug=${encodeURIComponent(slug)}">Xem thiệp</a>
-        <a href="#" onclick="(function(){ const db=${JSON.stringify({})}; const all=JSON.parse(localStorage.getItem('${DB_KEY}')||'{}'); delete all['${slug}']; localStorage.setItem('${DB_KEY}', JSON.stringify(all)); location.reload(); })(); return false;">Xoá</a>
+        <a href="#" onclick="(function(){ const all=JSON.parse(localStorage.getItem('${DB_KEY}')||'{}'); delete all['${slug}']; localStorage.setItem('${DB_KEY}', JSON.stringify(all)); location.reload(); })(); return false;">Xoá</a>
       </div>
     </div>
   `).join("");
