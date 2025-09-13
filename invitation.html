@@ -9,42 +9,61 @@
   <script defer src="app.js"></script>
 </head>
 <body>
-  <div class="invite-root">
-    <div class="invite-card">
-      
-      <!-- Ảnh bìa -->
-      <div class="cover-wrap">
-        <img class="invite-cover" id="coverImg" alt="Ảnh bìa">
-        <div class="cover-overlay">
-          <h2 class="invite-subtitle">Thiệp Mời</h2>
-          <h1 class="invite-names" id="coupleName"></h1>
-        </div>
+  <div class="invite-root royal-theme">
+    <!-- Hero section -->
+    <div class="hero">
+      <img src="https://images.unsplash.com/photo-1529632349658-54e4a1d19e7a?q=80&w=1200&auto=format&fit=crop" alt="cover" class="hero-img">
+      <div class="hero-overlay">
+        <h1 class="names" id="coupleName">Tên Cô Dâu & Tên Chú Rể</h1>
+        <p class="subtitle">Trân trọng kính mời</p>
       </div>
-      
-      <!-- Nội dung -->
-      <div class="invite-body" id="inviteBody">
-        <h2>Trân trọng kính mời</h2>
-        <p class="invite-date"><strong>Thời gian:</strong> <span id="weddingTime"></span></p>
-        <p class="invite-venue"><strong>Địa điểm:</strong> <span id="weddingVenue"></span></p>
-        <p id="weddingAddress"></p>
-        <p id="parents"></p>
-        <div id="mapsBox"></div>
-        
-        <!-- Countdown -->
-        <div id="countdownBox" class="countdown"></div>
-
-        <!-- Lời nhắn -->
-        <p id="note" class="invite-note"></p>
-
-        <!-- Album ảnh -->
-        <div id="albumBox"></div>
-      </div>
-      
-      <!-- Footer -->
-      <footer class="invite-footer">
-        <p>© 2025 Thiệp Cưới Online</p>
-      </footer>
     </div>
+
+    <!-- Details -->
+    <div class="details">
+      <h2>Lễ thành hôn</h2>
+      <p><strong>Thời gian:</strong> <span id="weddingTime">17:30 – 15/02/2025</span></p>
+      <p><strong>Địa điểm:</strong> <span id="weddingVenue">Trung tâm tiệc cưới Grand Palace</span></p>
+      <p><a href="https://maps.google.com" target="_blank">📍 Xem Google Maps</a></p>
+    </div>
+
+    <!-- Countdown -->
+    <div class="countdown" id="countdownBox">
+      <div><b id="days">0</b>Ngày</div>
+      <div><b id="hours">0</b>Giờ</div>
+      <div><b id="minutes">0</b>Phút</div>
+      <div><b id="seconds">0</b>Giây</div>
+    </div>
+
+    <!-- Album -->
+    <div class="album-carousel">
+      <div class="slides" id="albumSlides">
+        <div class="slide"><img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800" alt=""></div>
+        <div class="slide"><img src="https://images.unsplash.com/photo-1505761671935-60b3a7427bad?q=80&w=800" alt=""></div>
+        <div class="slide"><img src="https://images.unsplash.com/photo-1521312702322-c0f03659c4aa?q=80&w=800" alt=""></div>
+      </div>
+      <button class="nav prev" onclick="moveSlide(-1)">❮</button>
+      <button class="nav next" onclick="moveSlide(1)">❯</button>
+    </div>
+
+    <!-- RSVP -->
+    <div class="rsvp">
+      <h3>Xác nhận tham dự</h3>
+      <form onsubmit="event.preventDefault(); alert('Cảm ơn bạn đã xác nhận!');">
+        <input placeholder="Tên của bạn" required>
+        <select>
+          <option>Tham dự</option>
+          <option>Không tham dự</option>
+        </select>
+        <textarea placeholder="Lời chúc..."></textarea>
+        <button class="btn">Gửi</button>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="invite-footer">
+      <p>© 2025 Thiệp Cưới Online</p>
+    </footer>
   </div>
 </body>
 </html>
