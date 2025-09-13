@@ -1,1 +1,50 @@
-invitation.html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thiệp Cưới</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="invite-root">
+    <div class="invite-card">
+      
+      <!-- Ảnh bìa -->
+      <div class="cover-wrap">
+        <img class="invite-cover" id="coverImg" alt="Ảnh bìa">
+        <div class="cover-overlay">
+          <h2 class="invite-subtitle">Thiệp Mời</h2>
+          <h1 class="invite-names" id="coupleName"></h1>
+        </div>
+      </div>
+      
+      <!-- Nội dung -->
+      <div class="invite-body" id="inviteBody">
+        <h2>Trân trọng kính mời</h2>
+        <p class="invite-date"><strong>Thời gian:</strong> <span id="weddingTime"></span></p>
+        <p class="invite-venue"><strong>Địa điểm:</strong> <span id="weddingVenue"></span></p>
+        <p id="weddingAddress"></p>
+        <p id="parents"></p>
+        <div id="mapsBox"></div>
+        
+        <!-- Countdown -->
+        <div id="countdownBox" class="countdown"></div>
+
+        <!-- Lời nhắn -->
+        <p id="note" class="invite-note"></p>
+
+        <!-- Album ảnh -->
+        <div id="albumBox"></div>
+      </div>
+      
+      <!-- Footer -->
+      <footer class="invite-footer">
+        <p>© 2025 Thiệp Cưới Online</p>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
