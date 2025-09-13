@@ -16,7 +16,52 @@ function makeVietQR({ bankCode="970422", accountNo, amount, addInfo="WEDDING" })
   return `${base}?${p.toString()}`;
 }
 
+/* === Album render theo từng mẫu === */
+function renderAlbum(data){
+  if (data.template === "royal") {
+    return `
+      <div class="album-carousel">
+        <div class="slides">
+          ${data.images.map(src=>`<div class="slide"><img src="${src}"></div>`).join("")}
+        </div>
+        <button class="nav prev">&#10094;</button>
+        <button class="nav next">&#10095;</button>
+        <script>
+          (function(){
+            const slides=document.querySelector('.album-carousel .slides');
+            const prev=document.querySelector('.album-carousel .prev');
+            const next=document.querySelector('.album-carousel .next');
+            let index=0;
+            prev.addEventListener('click',()=>{index=Math.max(0,index-1);slides.style.transform='translateX(-'+(index*100)+'%)';});
+            next.addEventListener('click',()=>{index=Math.min(${data.images.length-1},index+1);slides.style.transform='translateX(-'+(index*100)+'%)';});
+          })();
+        </script>
+      </div>`;
+  }
+  if (data.template === "premium") {
+    return `<div class="album-kenburns">
+      ${data.images.map(src=>`<img src="${src}" alt="">`).join("")}
+    </div>`;
+  }
+  if (data.template === "floral") {
+    return `<div class="album-tilt">
+      ${data.images.map(src=>`<img src="${src}" alt="">`).join("")}
+    </div>`;
+  }
+  if (data.template === "minimal") {
+    return `<div class="album-zoom">
+      ${data.images.map(src=>`<img src="${src}" alt="">`).join("")}
+    </div>`;
+  }
+  // classic mặc định
+  return `<div class="album-fade">
+    ${data.images.map(src=>`<img src="${src}" alt="">`).join("")}
+  </div>`;
+}
+
+/* === Preview trong admin === */
 function renderPreviewInto(doc, data){
+  const albumHtml = renderAlbum(data);
   doc.open();
   doc.write(`
     <link rel="stylesheet" href="style.css">
@@ -32,9 +77,7 @@ function renderPreviewInto(doc, data){
           ${data.parents?`<p>${data.parents}</p>`:""}
           ${data.maps?`<p><a href="${data.maps}" target="_blank">Xem Google Maps</a></p>`:""}
           ${data.note?`<p>${data.note}</p>`:""}
-          <div class="album">
-            ${data.images.map(src=>`<img src="${src}" alt="">`).join("")}
-          </div>
+          ${albumHtml}
         </div>
       </div>
     </div>
@@ -42,6 +85,7 @@ function renderPreviewInto(doc, data){
   doc.close();
 }
 
+/* === Trang admin (builder) === */
 function initBuilder(){
   const bride=$("bride"), groom=$("groom");
   const date=$("date"), time=$("time");
@@ -50,7 +94,7 @@ function initBuilder(){
   const groomFather=$("groomFather"), groomMother=$("groomMother");
   const note=$("note");
   const albumInput=$("albumInput"), thumbs=$("thumbs");
-  const previewBtn=$("previewBtn"), payBtn=$("payBtn"), publishBtn=$("publishBtn");
+  const previewBtn=$("previewBtn"), payBtn=$("payBtn"), confirmBtn=$("confirmBtn");
   const previewFrame=$("previewFrame");
   const qrImg=$("qrImg"), qrLink=$("qrLink"), copyBtn=$("copyBtn");
   const accNo=$("accNo").textContent.trim(), amountText=$("amountText");
@@ -107,49 +151,79 @@ function initBuilder(){
 
   copyBtn.addEventListener("click",()=>navigator.clipboard.writeText(accNo).then(()=>alert("Đã sao chép số tài khoản!")));
 
+  // QR step
   payBtn.addEventListener("click",()=>{
     const data=collect();
     const url=makeVietQR({ bankCode:"970422",accountNo:accNo,amount:priceOf(data.template),addInfo:`WEDDING-${toSlug(data.bride)}-${toSlug(data.groom)}` });
     qrImg.src=url; qrLink.href=url;
-    alert("Quét QR để thanh toán. Sau đó bấm Xuất & Lấy link.");
-    publishBtn.disabled=false;
+    alert("Vui lòng quét QR để thanh toán. Sau khi chuyển khoản xong, nhấn 'Đã thanh toán'.");
+    confirmBtn.disabled=false;
   });
 
-  publishBtn.addEventListener("click",()=>{
+  // Confirm payment
+  confirmBtn.addEventListener("click",()=>{
     const data=collect();
     if(!data.bride||!data.groom){ alert("Vui lòng nhập tên cô dâu và chú rể!"); return; }
+    if(data.images.length===0){ alert("Vui lòng upload ít nhất 1 ảnh (tối đa 10)."); return; }
     const slug=`${toSlug(data.bride)}-${toSlug(data.groom)}`||"thiep-cuoi";
     const db=loadDB(); db[slug]={...data,paid:true,createdAt:Date.now()}; saveDB(db);
-    location.href=`share.html?slug=${encodeURIComponent(slug)}`;
+    location.href=`invitation.html?slug=${encodeURIComponent(slug)}`;
   });
 }
 
+/* === Trang thiệp riêng (sau thanh toán) === */
 function initInvitation(){
   const params=new URLSearchParams(location.search),slug=params.get("slug"),root=$("inviteRoot");
   if(!slug){root.textContent="Thiếu slug";return;}
   const data=loadDB()[slug]; if(!data){root.textContent="Không tìm thấy thiệp.";return;}
-  const wrap=document.createElement("div");
-  wrap.className=`invite-root theme-${data.template}`;
-  wrap.innerHTML=`
-    <div class="invite-card">
-      <img class="invite-cover" src="${data.images[0]||''}" alt="cover"/>
-      <div class="invite-body">
-        <h2>Trân trọng kính mời</h2>
-        <h1>${data.bride} & ${data.groom}</h1>
-        <p><strong>Thời gian:</strong> ${data.date} ${data.time}</p>
-        <p><strong>Địa điểm:</strong> ${data.venue}</p>
-        ${data.address?`<p>${data.address}</p>`:""}
-        ${data.parents?`<p>${data.parents}</p>`:""}
-        ${data.maps?`<p><a href="${data.maps}" target="_blank">Xem Google Maps</a></p>`:""}
-        ${data.note?`<p>${data.note}</p>`:""}
-        <div class="album">
-          ${data.images.map(src=>`<img src="${src}" alt="">`).join("")}
+
+  const albumHtml=renderAlbum(data);
+
+  // countdown
+  const countdown=`
+    <div class="countdown">
+      <div><b id="days">0</b>Ngày</div>
+      <div><b id="hours">0</b>Giờ</div>
+      <div><b id="minutes">0</b>Phút</div>
+      <div><b id="seconds">0</b>Giây</div>
+    </div>
+  `;
+
+  root.innerHTML=`
+    <div class="invite-root theme-${data.template}">
+      <div class="invite-card">
+        <img class="invite-cover" src="${data.images[0]||''}" alt="cover"/>
+        <div class="invite-body">
+          <h2>Trân trọng kính mời</h2>
+          <h1>${data.bride} & ${data.groom}</h1>
+          <p><strong>Thời gian:</strong> ${data.date} ${data.time}</p>
+          <p><strong>Địa điểm:</strong> ${data.venue}</p>
+          ${data.address?`<p>${data.address}</p>`:""}
+          ${data.parents?`<p>${data.parents}</p>`:""}
+          ${data.maps?`<p><a href="${data.maps}" target="_blank">Xem Google Maps</a></p>`:""}
+          ${data.note?`<p>${data.note}</p>`:""}
+          ${countdown}
+          ${albumHtml}
         </div>
       </div>
-    </div>`;
-  root.innerHTML=""; root.appendChild(wrap);
+    </div>
+  `;
+
+  // update countdown
+  try{
+    const dt=new Date(`${data.date}T${data.time||"00:00"}`);
+    setInterval(()=>{
+      const now=new Date();let diff=dt-now;if(diff<0) diff=0;
+      const d=Math.floor(diff/86400000);
+      const h=Math.floor((diff%86400000)/3600000);
+      const m=Math.floor((diff%3600000)/60000);
+      const s=Math.floor((diff%60000)/1000);
+      $("#days").textContent=d;$("#hours").textContent=h;$("#minutes").textContent=m;$("#seconds").textContent=s;
+    },1000);
+  }catch(_){}
 }
 
+/* === Trang quản lý === */
 function initManager(){
   const list=$("orders"),db=loadDB();
   const items=Object.entries(db).sort((a,b)=>(b[1]?.createdAt||0)-(a[1]?.createdAt||0));
@@ -167,6 +241,7 @@ function initManager(){
     </div>`).join("");
 }
 
+/* === Router === */
 document.addEventListener("DOMContentLoaded",()=>{
   const p=location.pathname;
   if(p.endsWith("admin.html")) return initBuilder();
