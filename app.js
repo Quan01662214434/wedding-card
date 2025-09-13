@@ -248,3 +248,28 @@ document.addEventListener("DOMContentLoaded",()=>{
   if(p.endsWith("invitation.html")) return initInvitation();
   if(p.endsWith("manager.html")) return initManager();
 });
+let currentSlide = 0;
+function moveSlide(step) {
+  const slides = document.getElementById("albumSlides");
+  const total = slides.children.length;
+  currentSlide = (currentSlide + step + total) % total;
+  slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+}
+
+// Countdown (demo: ngày cố định 2025-02-15 17:30)
+document.addEventListener("DOMContentLoaded", () => {
+  const targetDate = new Date("2025-02-15T17:30:00");
+  setInterval(() => {
+    const now = new Date();
+    let diff = targetDate - now;
+    if (diff < 0) diff = 0;
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
+    document.getElementById("days").textContent = d;
+    document.getElementById("hours").textContent = h;
+    document.getElementById("minutes").textContent = m;
+    document.getElementById("seconds").textContent = s;
+  },1000);
+});
