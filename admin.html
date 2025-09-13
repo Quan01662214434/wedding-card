@@ -4,37 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tạo thiệp — Thiệp Cưới Online</title>
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css"/>
-
-  <!-- Font (optional, đẹp hơn) -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- JS chính của dự án -->
   <script defer src="app.js"></script>
-
-  <style>
-    /* Chỉ để chắc chắn phần QR hiện đẹp, có thể bỏ nếu đã có trong style.css */
-    .bank-box { margin-top:10px; display:flex; align-items:center; gap:16px; padding:12px; border:1px dashed #f0b6bd; border-radius:12px; background:#fff7f8; }
-    .bank-box img { width:190px; height:190px; border-radius:10px; object-fit:contain; background:#fff; }
-    .muted { color:#666; }
-    .btn { background:#b11e2d; color:#fff; padding:10px 16px; border:none; border-radius:10px; cursor:pointer; font-weight:700; }
-    .btn:hover { filter:brightness(.95); }
-    .btn-sm { font-size:12px; padding:4px 8px; border-radius:8px; border:none; background:#444; color:#fff; cursor:pointer; }
-    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .panel { background:#fff; border-radius:16px; padding:20px; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
-    .builder-grid { display:grid; grid-template-columns: 1.1fr .9fr; gap:20px; padding:24px; }
-    .preview-panel iframe { width:100%; height:600px; border:none; background:#fff; border-radius:12px; box-shadow: inset 0 0 0 1px #eee; }
-    @media (max-width: 900px) { .builder-grid{grid-template-columns:1fr} .preview-panel iframe{height:520px} }
-  </style>
 </head>
 <body>
-  <header class="site-header" style="display:flex;justify-content:space-between;align-items:center;padding:16px;background:#b11e2d;color:#fff;">
-    <div class="brand" style="font-weight:800;">Tạo Thiệp</div>
-    <nav style="display:flex;gap:12px;">
-      <a href="index.html" style="color:#fff;text-decoration:none;font-weight:600;">Mẫu</a>
-      <a href="manager.html" style="color:#fff;text-decoration:none;font-weight:600;">Quản lý</a>
+  <header class="site-header">
+    <div class="brand">Tạo Thiệp</div>
+    <nav>
+      <a href="index.html">Mẫu</a>
+      <a href="manager.html">Quản lý</a>
     </nav>
   </header>
 
@@ -42,15 +21,34 @@
     <section class="panel form-panel">
       <h2>1) Thông tin thiệp</h2>
 
-      <label>Chọn mẫu
-        <select id="templateSelect">
-          <option value="classic">Classic (300.000đ)</option>
-          <option value="floral">Floral (300.000đ)</option>
-          <option value="minimal">Minimal (300.000đ)</option>
-          <option value="royal">Royal (300.000đ)</option>
-          <option value="premium">Premium (400.000đ)</option>
-        </select>
-      </label>
+      <h3>Chọn mẫu</h3>
+      <div id="templateGallery" class="template-gallery">
+        <label>
+          <input type="radio" name="template" value="classic" checked>
+          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=400&auto=format&fit=crop" alt="Classic">
+          <div class="tpl-name">Classic (300k)</div>
+        </label>
+        <label>
+          <input type="radio" name="template" value="floral">
+          <img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=400&auto=format&fit=crop" alt="Floral">
+          <div class="tpl-name">Floral (300k)</div>
+        </label>
+        <label>
+          <input type="radio" name="template" value="minimal">
+          <img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=400&auto=format&fit=crop" alt="Minimal">
+          <div class="tpl-name">Minimal (300k)</div>
+        </label>
+        <label>
+          <input type="radio" name="template" value="royal">
+          <img src="https://images.unsplash.com/photo-1521312702322-c0f03659c4aa?q=80&w=400&auto=format&fit=crop" alt="Royal">
+          <div class="tpl-name">Royal (300k)</div>
+        </label>
+        <label>
+          <input type="radio" name="template" value="premium">
+          <img src="https://images.unsplash.com/photo-1523800503107-5bc3ba2a6f81?q=80&w=400&auto=format&fit=crop" alt="Premium">
+          <div class="tpl-name">Premium (400k)</div>
+        </label>
+      </div>
 
       <div class="two-col">
         <label>Tên cô dâu<input id="bride" placeholder="Nguyễn A"/></label>
@@ -64,7 +62,7 @@
 
       <label>Địa điểm tổ chức<input id="venue" placeholder="Trung tâm tiệc cưới..."/></label>
       <label>Địa chỉ chi tiết<input id="address" placeholder="Số nhà, phường/xã, quận/huyện, tỉnh/thành"/></label>
-      <label>Google Maps link (URL)<input id="maps" placeholder="https://maps.google.com/?q=..."/></label>
+      <label>Google Maps link<input id="maps" placeholder="https://maps.google.com/?q=..."/></label>
 
       <div class="two-col">
         <label>Bố cô dâu<input id="brideFather" placeholder="Ông..."/></label>
@@ -75,16 +73,17 @@
         <label>Mẹ chú rể<input id="groomMother" placeholder="Bà..."/></label>
       </div>
 
-      <label>Lời nhắn gửi khách mời<textarea id="note" rows="3" placeholder="Rất hân hạnh được đón tiếp!"></textarea></label>
+      <label>Lời nhắn<textarea id="note" rows="3" placeholder="Rất hân hạnh được đón tiếp!"></textarea></label>
 
-      <label>Ảnh bìa thiệp (JPG/PNG)
-        <input id="cover" type="file" accept="image/*"/>
+      <!-- Upload album ảnh -->
+      <label>Album ảnh cưới (tối đa 10 ảnh)
+        <input id="albumInput" type="file" accept="image/*" multiple>
       </label>
+      <div id="thumbs" class="thumbs"></div>
 
       <h3>2) Thanh toán</h3>
-      <p class="muted">Giá tự tính theo mẫu: 4 mẫu thường 300.000đ, 1 mẫu Premium 400.000đ.</p>
+      <p class="muted">Giá tự tính theo mẫu: 4 mẫu thường 300.000đ, Premium 400.000đ.</p>
 
-      <!-- Khối QR: ĐÃ CẬP NHẬT THÊM LINK MỞ ẢNH + XỬ LÝ LỖI -->
       <div class="bank-box">
         <div>
           <div><strong>MB Bank</strong></div>
@@ -93,12 +92,9 @@
             <button class="btn-sm" id="copyBtn" type="button">Sao chép</button>
           </div>
           <div style="margin-top:6px;">Thành tiền: <strong><span id="amountText">300.000</span>đ</strong></div>
-          <div style="margin-top:6px">
-            <a id="qrLink" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">Mở ảnh QR</a>
-          </div>
+          <div style="margin-top:6px"><a id="qrLink" target="_blank">Mở ảnh QR</a></div>
         </div>
-
-        <img id="qrImg" alt="QR" onerror="this.style.display='none'; document.getElementById('qrLink').textContent='Mở ảnh QR (dự phòng)';"/>
+        <img id="qrImg" alt="QR" />
       </div>
 
       <div class="actions" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;">
@@ -106,8 +102,6 @@
         <button class="btn" id="payBtn" type="button">Tạo QR</button>
         <button class="btn" id="publishBtn" type="button" disabled>Xuất & Lấy link</button>
       </div>
-
-      <p class="hint" style="color:#777;font-size:13px;margin-top:8px;">* Sau thanh toán và bấm “Xuất & Lấy link”, bạn sẽ có đường dẫn thiệp: <code>/invitation.html?slug=ten-co-dau-ten-chu-re</code>.</p>
     </section>
 
     <section class="panel preview-panel">
@@ -116,18 +110,6 @@
     </section>
   </main>
 
-  <footer class="site-footer" style="padding:16px;text-align:center;color:#777;">© 2025 Thiệp Cưới Online</footer>
-
-  <!-- Đoạn test nhanh QR (không bắt buộc). Bấm thử để chắc ảnh QR hiển thị -->
-  <script>
-    // Bạn có thể xoá script test này sau khi xác nhận QR hoạt động
-    window.addEventListener('DOMContentLoaded', () => {
-      const testBtn = document.getElementById('payBtn');
-      if (!testBtn) return;
-      // thêm tooltip nhỏ
-      testBtn.title = 'Nếu QR không hiện ảnh, kiểm tra lại app.js và thử mở link "Mở ảnh QR"';
-    });
-  </script>
+  <footer class="site-footer">© 2025 Thiệp Cưới Online</footer>
 </body>
 </html>
-
