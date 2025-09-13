@@ -3,155 +3,30 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Link thiệp của bạn</title>
+  <title>Chia sẻ Thiệp Cưới</title>
   <link rel="stylesheet" href="style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    .wrap{max-width:860px;margin:32px auto;background:#fff;border-radius:16px;padding:24px;box-shadow:0 14px 40px rgba(0,0,0,.08)}
-    .muted{color:#666}.grid{display:grid;gap:14px}
-    .btn{background:#b11e2d;color:#fff;padding:10px 16px;border:none;border-radius:10px;cursor:pointer;font-weight:700}
-    .btn.secondary{background:#444}.row{display:flex;gap:10px;flex-wrap:wrap}
-    .box{border:1px solid #eee;border-radius:12px;padding:12px}
-    .linkbox{display:flex;gap:8px}.linkbox input{flex:1;padding:10px;border:1px solid #e6d6d6;border-radius:10px}
-    .mini-card{border:1px solid #eee;border-radius:12px;overflow:hidden}
-    .mini-card img{width:100%;height:200px;object-fit:cover;background:#f6f6f6}
-    .mini-card .meta{padding:10px}
-    .countdown{display:flex;gap:10px}
-    .cd-item{background:#f7f7f7;border-radius:10px;padding:8px 12px;text-align:center}
-    .cd-item b{display:block;font-size:20px}
-    .album{margin-top:10px}
-    .rsvp input,.rsvp select,.rsvp textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px}
-    .rsvp .grid2{display:grid;gap:10px;grid-template-columns:1fr 1fr}
-  </style>
 </head>
 <body>
-  <main class="container">
-    <div class="wrap grid">
-      <header class="row" style="align-items:center">
-        <div style="width:44px;height:44px;border-radius:50%;background:#1d7e34;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px">✓</div>
-        <div>
-          <h2 style="margin:0">Thiệp đã sẵn sàng!</h2>
-          <div class="muted">Chia sẻ link bên dưới cho người thân, bạn bè.</div>
-        </div>
-      </header>
-
-      <!-- Link chia sẻ -->
-      <section class="box">
-        <div class="linkbox">
-          <input id="inviteUrl" readonly>
-          <button id="copyBtn" class="btn secondary" type="button">Sao chép</button>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <a id="openBtn" class="btn" target="_blank" rel="noopener">Mở thiệp</a>
-          <button id="shareBtn" class="btn secondary" type="button">Chia sẻ…</button>
-        </div>
-      </section>
-
-      <!-- Đếm ngược & Add to Calendar -->
-      <section class="box grid">
-        <div class="row" style="align-items:center;justify-content:space-between">
-          <h3 style="margin:0">Sắp đến ngày cưới</h3>
-          <a id="icsBtn" class="btn secondary" download="wedding.ics">Thêm vào Calendar</a>
-        </div>
-        <div class="countdown" id="countdown">
-          <div class="cd-item"><b id="cdDays">0</b>Ngày</div>
-          <div class="cd-item"><b id="cdHours">0</b>Giờ</div>
-          <div class="cd-item"><b id="cdMins">0</b>Phút</div>
-          <div class="cd-item"><b id="cdSecs">0</b>Giây</div>
-        </div>
-      </section>
-
-      <!-- Preview mini -->
-      <section id="mini" class="mini-card" style="display:none">
-        <img id="miniCover" alt="cover"/>
-        <div class="meta">
-          <div id="miniNames" style="font-weight:800;"></div>
-          <div id="miniInfo" class="muted"></div>
-          <div id="miniMap" style="margin-top:6px"></div>
-        </div>
-      </section>
-
-      <!-- Album theo mẫu -->
-      <section class="box">
-        <h3 style="margin-top:0">Album hình cưới</h3>
-        <div id="album" class="album"></div>
-      </section>
-
-      <!-- RSVP -->
-      <section class="box rsvp">
-        <h3 style="margin-top:0">Xác nhận tham dự</h3>
-        <div class="grid2">
-          <label>Họ tên<input id="rsvpName" placeholder="Nguyễn Văn A"></label>
-          <label>Số người<select id="rsvpCount"><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
-        </div>
-        <label>Lời nhắn<textarea id="rsvpNote" rows="3" placeholder="Lời chúc/ghi chú dị ứng món..."></textarea></label>
-        <button id="rsvpBtn" class="btn" type="button">Gửi xác nhận</button>
-        <div id="rsvpMsg" class="muted" style="margin-top:6px"></div>
-      </section>
+  <div class="share-wrap">
+    <h2>🎉 Thiệp của bạn đã sẵn sàng!</h2>
+    <p>Bạn có thể copy link bên dưới để chia sẻ:</p>
+    <div class="linkbox">
+      <input id="shareLink" readonly>
+      <button class="btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('shareLink').value)">Copy</button>
     </div>
-  </main>
+    <div style="margin-top:16px;">
+      <a id="openInvite" class="btn">Mở thiệp</a>
+    </div>
+  </div>
 
   <script>
-    const params=new URLSearchParams(location.search);
-    const slug=params.get('slug')||'';
-    const fullUrl=`${location.origin}/invitation.html?slug=${encodeURIComponent(slug)}`;
-    const input=$('#inviteUrl'), openBtn=$('#openBtn'), copyBtn=$('#copyBtn'), shareBtn=$('#shareBtn');
-    input.value=fullUrl; openBtn.href=fullUrl;
-    copyBtn.addEventListener('click',()=>navigator.clipboard.writeText(fullUrl).then(()=>alert('Đã sao chép link!')));
-    shareBtn.addEventListener('click',async()=>{ if(navigator.share){ try{ await navigator.share({title:'Thiệp cưới',text:'Mời bạn xem thiệp cưới của chúng tôi',url:fullUrl})}catch(e){} } else { alert('Thiết bị không hỗ trợ Chia sẻ. Vui lòng sao chép link.'); }});
-
-    function $(s){ return document.querySelector(s) }
-    const DB_KEY='wedding_invites_v2';
-    let data=null; try{ data=JSON.parse(localStorage.getItem(DB_KEY)||'{}')[slug] }catch(_){}
-    const albumEl=$('#album'), mini=$('#mini'), miniCover=$('#miniCover'), miniNames=$('#miniNames'), miniInfo=$('#miniInfo'), miniMap=$('#miniMap');
-
-    if(data){
-      const cover=(data.images?.[data.coverIndex||0]) || data.cover || '';
-      miniCover.src=cover || 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1400&auto=format&fit=crop';
-      miniNames.textContent=`${data.bride} & ${data.groom}`;
-      miniInfo.textContent=`${data.date} ${data.time} • ${data.venue}`;
-      if(data.maps) miniMap.innerHTML=`<a class="muted" target="_blank" href="${data.maps}">Xem trên Google Maps</a>`;
-      mini.style.display='block';
-
-      // Render album theo effect của mẫu
-      const effect = data.effect || 'album-fade';
-      albumEl.className = `album ${effect}`;
-      const imgs = Array.isArray(data.images) && data.images.length ? data.images : [];
-      if(effect==='album-carousel'){
-        // slider dạng scroll-snap
-        albumEl.innerHTML = `<div class="carousel">${imgs.map(s=>`<div class="slide"><img src="${s}" alt=""></div>`).join('')}</div>`;
-      }else{
-        albumEl.innerHTML = imgs.map(s=>`<img src="${s}" alt="">`).join('');
-      }
-
-      // Countdown
-      try{
-        const dt = new Date(`${data.date}T${(data.time||'00:00')}:00`);
-        const dEl=$('#cdDays'), hEl=$('#cdHours'), mEl=$('#cdMins'), sEl=$('#cdSecs');
-        const tick=()=>{ const now=new Date(); let diff=Math.max(0,dt-now);
-          const d=Math.floor(diff/86400000); diff-=d*86400000;
-          const h=Math.floor(diff/3600000); diff-=h*3600000;
-          const m=Math.floor(diff/60000); diff-=m*60000;
-          const s=Math.floor(diff/1000);
-          dEl.textContent=d; hEl.textContent=h; mEl.textContent=m; sEl.textContent=s; };
-        tick(); setInterval(tick,1000);
-      }catch(_){}
-
-      // ICS
-      const icsBtn=$('#icsBtn');
-      const dtStart=(data.date||'').replace(/-/g,'') + (data.time? 'T'+data.time.replace(':','')+'00' : 'T000000');
-      const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ThiepCuoiOnline//VN','BEGIN:VEVENT','DTSTART:'+dtStart,'DTEND:'+dtStart,'SUMMARY:Lễ cưới '+data.bride+' & '+data.groom,'LOCATION:'+(data.venue||'')+(data.address?(', '+data.address):''),'DESCRIPTION:'+(data.note||''),'END:VEVENT','END:VCALENDAR'].join('\r\n');
-      const blob=new Blob([ics],{type:'text/calendar'}); icsBtn.href=URL.createObjectURL(blob);
+    const params = new URLSearchParams(location.search);
+    const slug = params.get("slug");
+    if (slug) {
+      const link = `${location.origin}/invitation.html?slug=${slug}`;
+      document.getElementById("shareLink").value = link;
+      document.getElementById("openInvite").href = link;
     }
-
-    // RSVP save local
-    const rsvpBtn=$('#rsvpBtn'), rsvpMsg=$('#rsvpMsg');
-    rsvpBtn.addEventListener('click',()=>{
-      const name=$('#rsvpName').value.trim(), count=$('#rsvpCount').value, note=$('#rsvpNote').value.trim();
-      if(!name) return alert('Vui lòng nhập họ tên');
-      try{ const key='wedding_rsvps'; const store=JSON.parse(localStorage.getItem(key)||'{}'); if(!store[slug]) store[slug]=[]; store[slug].push({name,count,note,at:Date.now()}); localStorage.setItem(key, JSON.stringify(store)); rsvpMsg.textContent='Đã ghi nhận! Cảm ơn bạn.' }catch(_){ rsvpMsg.textContent='Có lỗi khi lưu. Vui lòng thử lại.' }
-    });
   </script>
 </body>
 </html>
-
